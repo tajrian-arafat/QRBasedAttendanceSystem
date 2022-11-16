@@ -31,7 +31,7 @@
     });
 
     function makeRequest (){
-        $.ajax({url: "/trying/public/getQR", success: function(result){
+        $.ajax({url: "/QRBasedAttendanceSystem/public/getQR", success: function(result){
             $("#qr-div").html(result);
         }});
     }
