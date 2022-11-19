@@ -1,8 +1,7 @@
-
 @extends('global-content')
 
 @section('styles')
-    <style>
+<style>
         /* fonts */
         @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600|Roboto:300,400');
 
@@ -392,6 +391,8 @@
     </style>
 @endsection
 
+
+
 @section('content')
 <div class="row">
         <div class="wrapper" style="min-width:1000px!important;">
@@ -401,16 +402,14 @@
 
             <!--courses-->
             <aside class="wallet">
-                <h2>My Courses</h2>
-                <div class="modal-control">+</div>
-
-
+                <h2>Section 1</h2>
 
 
                 <div class="pt-4 text-center list-group">
-                    @foreach($courses_data as $course)
-                        <button id="course-list-{{$course->course_id}}" type="button" class="courses list-group-item list-group-item-action" onclick="fetchSectionList('{{$course->course_id}}');">{{$course->name}}</button>
-                    @endforeach
+
+                    <button type="button" class="list-group-item list-group-item-action">Generate QR Code</button>
+                    <button type="button" class="list-group-item list-group-item-action">Add student</button>
+                    <button type="button" class="list-group-item list-group-item-action">Remove Student</button>
 
                 </div>
 
@@ -418,13 +417,39 @@
             </aside>
 
             <content class="transactions-wrapper">
-                <h2>Sections</h2>
-                <div class="pt-4 list-group" id="section-list">
+                <h2>Students</h2>
 
-                    <div class="row" style="align:center;">
-                        <b><i>Please Click a Course Name To See Sections</i></b>
-                    </div>
-                </div>
+
+
+                <table class="text-center table table-dark table-striped pt-4">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Handle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                        </tr>
+                        <tr>
+                        <th scope="row">3</th>
+                        <td colspan="2">Larry the Bird</td>
+                        <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </table>
             </content>
 
             </div>
@@ -433,27 +458,9 @@
 </div>
 @endsection
 
+
+
+
+
 @section('scripts')
-<script>
-    function fetchSectionList(course_id){
-
-        $('.courses').removeClass('active');
-        $('#course-list-'+course_id).addClass('active');
-
-        var this_url = '{{ env('APP_URL') }}'+'/getSections';
-        $.ajax({
-            url: this_url,
-            method:'POST',
-            data:{
-                '_token':'{{ csrf_token() }}',
-                'teacher_id':'{{$teacher_id}}',
-                'course_id':course_id
-            },
-            success: function(result){
-
-            }
-        });
-
-    }
-</script>
 @endsection

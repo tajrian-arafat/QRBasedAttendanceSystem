@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +15,11 @@ use App\Http\Controllers\QrCodeController;
 |
 */
 
-Route::get('/home', function () {
-    return view('teacher-home');
-});
+Route::get('/home', [HomeController::class, 'home']);
+Route::get('/section', [HomeController::class, 'section']);
 
-
+Route::get('/getSections', [HomeController::class, 'sectionList']);
+Route::post('/getSections', [HomeController::class, 'sectionList']);
 
 Route::get('/generate-qrcode', [QrCodeController::class, 'index']);
 Route::get('/getQR', [QrCodeController::class, 'getQR']);

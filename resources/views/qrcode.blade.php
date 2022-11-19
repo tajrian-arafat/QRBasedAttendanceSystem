@@ -29,7 +29,7 @@
     });
 
     function makeRequest (){
-        $.ajax({url: "/QRBasedAttendanceSystem/public/getQR", success: function(result){
+        $.ajax({url: "/getQR", success: function(result){
             $("#qr-div").html(result);
         }});
     }
