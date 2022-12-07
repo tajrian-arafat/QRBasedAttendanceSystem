@@ -419,9 +419,9 @@
 
             <content class="transactions-wrapper">
                 <h2>Sections</h2>
-                <div class="pt-4 list-group" id="section-list">
+                <div class="pt-4 list-group">
 
-                    <div class="row" style="align:center;">
+                    <div class="row" style="align:center;" id="section-list">
                         <b><i>Please Click a Course Name To See Sections</i></b>
                     </div>
                 </div>
@@ -450,9 +450,21 @@
                 'course_id':course_id
             },
             success: function(result){
-
+                let sectionHtml="";
+                result=JSON.parse(result);
+                $.each(result, function(key,data){
+                    sectionHtml=sectionHtml+`<button id="section-list-${data.id}" type="button" class="sections list-group-item list-group-item-action" onclick="gotoSectionDetails('${data.id}','${data.course_id}');">${data.name}</button>`;
+                });
+                $("#section-list").html(sectionHtml);
             }
         });
+
+    }
+
+    function gotoSectionDetails(section_id,course_id) {
+
+        var this_url = '{{ env('APP_URL') }}'+'/section?cid='+course_id+'&sid='+section_id;
+        window.location.href=this_url;
 
     }
 </script>

@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="btn btn-success" href="#">Home</span></a>
+                    <a class="btn btn-success" href="home">Home</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-danger" href="#">Logout</a>

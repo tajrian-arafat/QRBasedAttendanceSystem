@@ -422,32 +422,39 @@
 
 
                 <table class="text-center table table-dark table-striped pt-4">
-                    <thead>
-                        <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
                     <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        </tr>
-                        <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                        </tr>
+                        @foreach($students as $student)
+
+                            <div class="row" style="border-radius: 3px; border-color:black; padding:3px;">
+                                    <!-- Trigger Buttons HTML -->
+                                    <div class="col-md-8" style="padding:3px;">
+                                        <button type="button" class="card card-body ms-4" style="color:black;background:grey; min-width:270px;">{{$student->name}}</button>
+                                    </div>
+                                    <div class="col-md-2 pull-left" style="padding:3px;">
+                                        <button type="button" class="card card-body ms-4" style="color:white;background:green; min-width:70px;" onclick="showAttendance('{{$student->id}}',1);">Show</button>
+                                    </div>
+                                    <div class="col-md-2 pull-right">
+                                        <button type="button" class="card card-body ms-4" style="color:white;background:red; min-width:70px;" onclick="showAttendance('{{$student->id}}',2);">Hide</button>
+                                    </div>
+                                <!-- Collapsible Element HTML -->
+                                <div class="">
+                                    <table class="text-center table table-dark table-striped pt-4 attendance-data" id="attendance-{{$student->id}}">
+                                        <thead>
+                                            <th>Date</th>
+                                            <th>Attendance</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($student->attendance_records as $attendance)
+                                                <tr>
+                                                    <td>{{$attendance->date}}</td>
+                                                    <td>{{$attendance->attendance}}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        @endforeach
                     </tbody>
                 </table>
             </content>
@@ -463,4 +470,16 @@
 
 
 @section('scripts')
+    <script>
+        $(".attendance-data").hide();
+        function showAttendance(student_id,indicator){
+            var div_id="attendance-"+student_id;
+
+            if(indicator==1){
+                $("#"+div_id).show();
+            }else{
+                $("#"+div_id).hide();
+            }
+        }
+    </script>
 @endsection
