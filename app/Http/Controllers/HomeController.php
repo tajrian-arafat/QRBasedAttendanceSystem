@@ -7,10 +7,39 @@ use DB;
 
 class HomeController extends Controller
 {
+    public function login(){
+
+        return view('login');
+    }
+
+    public function logout(){
+        session()->forget('teacher_id');
+        return view('login');
+    }
+
+    public function teacherLogin(){
+        $email=isset($_POST["email"])?$_POST["email"]:0;
+        $email=isset($_GET["email"])?$_GET["email"]:$email;
+
+        $password=isset($_POST["password"])?$_POST["password"]:0;
+        $password=isset($_GET["searpasswordch"])?$_GET["password"]:$password;
+
+        $userCheck=DB::table('qr_teachers')->where('email',$email)->where('password',$password)->limit(1)->get()->toArray();
+
+        $status=200;
+        if(empty($userCheck)){
+            $status=400;
+        }else{
+            session(['teacher_id' =>$userCheck[0]->id]);
+        }
+
+        return json_encode(array("status"=>$status,"data"=>$userCheck));
+    }
+
     public function home(){
 
         // Hardcode for login Teacher = Teacher 1 --- Later we will implement proper login Auth;
-        $teacher_id=1;
+        $teacher_id=session('teacher_id');
 
         // $sql=`SELECT qr_sections.course_id, qr_courses.name FROM qr_sections
         // LEFT JOIN qr_courses ON qr_courses.id=qr_sections.course_id

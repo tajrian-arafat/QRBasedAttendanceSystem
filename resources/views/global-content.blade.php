@@ -65,17 +65,17 @@
             <div class="row ml-0 mr-0">
                 <div class="col-xs-12 col-md-3">
                     <div id="logo" class="pull-left" style="">
-                        <div style="">
-                            <a href="https://salesconnection.my"><img class="overrideBlog" src="https://d1ecswny2xx9fq.cloudfront.net/rrymalau/activity_comment/Clockifycode_(SC)_2022_Dec_11_vyt5zh8s_.png" alt="QR Based Attendance" title="QR Based Attendance" height="60" width="60" style="bottom: .8rem;position: relative;"></a>
-                            <span style="font-size:40px; color:white;"><b><i>Quickieee</i></b></span>
-                            <span>
-                            </span>
+                        <div class="row">
+                                <a href="https://salesconnection.my"><img class="overrideBlog" src="https://d1ecswny2xx9fq.cloudfront.net/rrymalau/activity_comment/Clockifycode_(SC)_2022_Dec_11_vyt5zh8s_.png" alt="QR Based Attendance" title="QR Based Attendance" height="60" width="60" style="bottom: .8rem;position: relative;"></a>
+                                <span style="font-size:40px; color:white;"><b><i>Quickieee</i></b></span>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-7 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;">
-
-                </div>
+                @if(session('teacher_id'))
+                    <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:70px;">
+                        <button class="btn btn-danger" onclick="logout();">Logout</button>
+                    </div>
+                @endif
             </div>
         </div>
     </header>
@@ -118,4 +118,12 @@
     <!-- Sc Custom plugins -->
 
     <script type="text/javascript" src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+
+    <script>
+        function logout(){
+            var this_url = '{{ env('APP_URL') }}'+'/logout';
+
+            window.location.href=this_url;
+        }
+    </script>
     @yield('scripts')
