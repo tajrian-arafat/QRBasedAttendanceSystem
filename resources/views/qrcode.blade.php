@@ -22,6 +22,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <script>
+    var qr_count=0;
     $(document ).ready(function() {
         makeRequest();
         setInterval(makeRequest, (3 * 1000));
@@ -29,9 +30,20 @@
     });
 
     function makeRequest (){
-        $.ajax({url: "getQR", success: function(result){
-            $("#qr-div").html(result);
-        }});
+        var section_id='{{$section_id}}';
+
+        if(qr_count<100){
+            $.ajax({
+                url: "getQR",
+                data:{section_id:section_id},
+                success: function(result){
+                $("#qr-div").html(result);
+                qr_count++;
+            }});
+        }else{
+            $("#qr-div").html("Time Up! Please contact Teacher for Manual Attendance.");
+        }
+
     }
 
 

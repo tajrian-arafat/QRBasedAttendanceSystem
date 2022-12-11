@@ -32,7 +32,6 @@
         .wrapper {
             width: 100vw;
             font-family: 'Open Sans', sans-serif;
-            padding: 50px;
         }
 
         .app-wrapper {
@@ -245,61 +244,6 @@
             transform: scale(1.1);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1;
-            top: 0;
-            left: 0;
-            text-align: center;
-            transition: .2s;
-        }
-
-        .modal.open {
-            display: block;
-        }
-
-        .modal-body {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 35px 15px 25px;
-            z-index: 2;
-            display: inline-block;
-            margin-top: 20%;
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .modal-body h3 {
-            font: 20px/20px 'Open Sans', sans-serif;
-            color: #707584;
-        }
-
-        .modal-control, .modal-close {
-            display: inline-block;
-            float: right;
-            color: #c6cce2;
-            font-size: 45px;
-            line-height: 22px;
-            cursor: pointer;
-            transition: color .1s;
-        }
-
-        .modal-control:hover, .modal-close:hover {
-            color: #8393ca;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            transform: rotate(45deg);
-        }
-
         /* animations */
         @keyframes fade-in {
             0% {
@@ -394,74 +338,117 @@
 
 
 @section('content')
-<div class="row">
-        <div class="wrapper" style="min-width:1000px!important;">
-            <div class="app-wrapper">
 
-
-
-            <!--courses-->
-            <aside class="wallet">
-                <h2>Section 1</h2>
-
-
-                <div class="pt-4 text-center list-group">
-
-                    <button type="button" class="list-group-item list-group-item-action">Generate QR Code</button>
-                    <button type="button" class="list-group-item list-group-item-action">Add student</button>
-                    <button type="button" class="list-group-item list-group-item-action">Remove Student</button>
-
-                </div>
-
-                <div class="cards"></div>
-            </aside>
-
-            <content class="transactions-wrapper">
-                <h2>Students</h2>
-
-
-
-                <table class="text-center table table-dark table-striped pt-4">
-                    <tbody>
-                        @foreach($students as $student)
-
-                            <div class="row" style="border-radius: 3px; border-color:black; padding:3px;">
-                                    <!-- Trigger Buttons HTML -->
-                                    <div class="col-md-8" style="padding:3px;">
-                                        <button type="button" class="card card-body ms-4" style="color:black;background:grey; min-width:270px;">{{$student->name}}</button>
-                                    </div>
-                                    <div class="col-md-2 pull-left" style="padding:3px;">
-                                        <button type="button" class="card card-body ms-4" style="color:white;background:green; min-width:70px;" onclick="showAttendance('{{$student->id}}',1);">Show</button>
-                                    </div>
-                                    <div class="col-md-2 pull-right">
-                                        <button type="button" class="card card-body ms-4" style="color:white;background:red; min-width:70px;" onclick="showAttendance('{{$student->id}}',2);">Hide</button>
-                                    </div>
-                                <!-- Collapsible Element HTML -->
-                                <div class="">
-                                    <table class="text-center table table-dark table-striped pt-4 attendance-data" id="attendance-{{$student->id}}">
-                                        <thead>
-                                            <th>Date</th>
-                                            <th>Attendance</th>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($student->attendance_records as $attendance)
-                                                <tr>
-                                                    <td>{{$attendance->date}}</td>
-                                                    <td>{{$attendance->attendance}}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        @endforeach
-                    </tbody>
-                </table>
-            </content>
+<div class="wrapper" style="max-width:1000px!important; padding-top: 100px">
+    <div class="app-wrapper">
+        <aside class="wallet">
+            <h2>{{$details[0]->course_name}} - {{$details[0]->name}}</h2>
+            <div class="pt-4 text-center list-group">
+                <button type="button" class="list-group-item list-group-item-action" onclick="generateQRCode();">Generate QR Code</button>
+                <button type="button" class="list-group-item list-group-item-action" onclick="studentModal('add');">Add student</button>
+                <button type="button" class="list-group-item list-group-item-action" onclick="studentModal('remove');">Remove Student</button>
 
             </div>
 
-        </div>
+            <div class="cards"></div>
+        </aside>
+
+
+
+        <content class="transactions-wrapper">
+            <h2>Student List</h2>
+            <div class="pt-4 list-group">
+
+                <table class="table" style="min-width:140%;">
+                    <thead>
+                        <tr>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Student Id</th>
+                        <th scope="col">Percentage</th>
+                        <th scope="col">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($students as $key => $student)
+                            <tr>
+                                <td>{{$student->name}}</td>
+                                <td>{{$student->student_id}}</td>
+                                <td>{{$student->percentage}} ({{$student->total_present}}/{{$student->total_attendances}})</td>
+                                <td onclick="fetchStudentAttendance('{{$student->id}}','{{$details[0]->id}}','{{$student->student_id}}');"><span class="material-icons" style="color:green; cursor:pointer;">manage_accounts</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+            </div>
+        </content>
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="studentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="studentModalLabel">Search Student Database</h5>
+      </div>
+      <div class="modal-body">
+      <table class="table table-dark">
+        <thead>
+
+        </thead>
+        <tbody id="studentModal-content">
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" placeholder="Search with student ID/Name/Email" id="student-search"/>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary" onclick="searchStudent();">Search</button>
+                    <input type="hidden" id="action-type"/>
+                </div>
+            </div>
+            <div id="student-list-search">
+
+            </div>
+        </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="attendanceModalLabel"><p id="modal-title"></p></h5>
+      </div>
+      <div class="modal-body">
+      <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Attendance</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody id="modal-content">
+
+        </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection
 
@@ -471,15 +458,165 @@
 
 @section('scripts')
     <script>
-        $(".attendance-data").hide();
-        function showAttendance(student_id,indicator){
-            var div_id="attendance-"+student_id;
 
-            if(indicator==1){
-                $("#"+div_id).show();
-            }else{
-                $("#"+div_id).hide();
-            }
+        function studentModal(action_type){
+            $("#action-type").val(action_type);
+            $("#studentModal").modal("show");
+        }
+
+        function fetchStudentAttendance(student_id,section_id,student_ref_id) {
+
+            $("#modal-title").html("Student ID: "+student_ref_id);
+
+            var this_url = '{{ env('APP_URL') }}'+'/getStudentAttendance';
+            $.ajax({
+                url: this_url,
+                method:'POST',
+                data:{
+                    '_token':'{{ csrf_token() }}',
+                    'student_id':student_id,
+                    'section_id':section_id
+                },
+                success: function(result){
+                    let listHtml="";
+                    result=JSON.parse(result);
+                    $.each(result, function(key,data){
+                        let date=data.date;
+                        let attendance=data.attendance;
+
+                        let present_selected="";
+                        let absent_selected="";
+
+                        if(attendance==1){
+                            present_selected="selected";
+                        }else{
+                            absent_selected="selected";
+                        }
+
+                        listHtml=listHtml+`<tr><td>${date}</td>
+                        <td><select id="attendance-${data.id}" class="form-control">
+                            <option value="1" ${present_selected}>Present</option>
+                            <option value="0" ${absent_selected}>Absent</option>
+                        </select></td>
+                        <td>  <button type="button" class="btn btn-primary" onclick="editAttendance('${data.id}')">Save</button></td></tr>`;
+                    });
+
+                    if(result.length > 0){
+                        $("#modal-content").html(listHtml);
+                    }else{
+                        $("#modal-content").html("<center>No Attendance Available</center>");
+                    }
+
+
+                    $("#attendanceModal").modal("show");
+                }
+            });
+
+        }
+
+        function editAttendance(attendance_id){
+            var attendance=$("#attendance-"+attendance_id).val();
+            var this_url = '{{ env('APP_URL') }}'+'/editAttendance';
+            $.ajax({
+                url: this_url,
+                method:'POST',
+                data:{
+                    '_token':'{{ csrf_token() }}',
+                    'attendance_id':attendance_id,
+                    'attendance':attendance
+                },
+                success: function(result){
+                    $("#attendanceModal").modal("hide");
+
+                    swal("Attendance Record Successfully Updated.");
+                }
+            });
+
+        }
+
+        function searchStudent(){
+            var search=$("#student-search").val();
+            var action_type=$("#action-type").val();
+
+            var this_url = '{{ env('APP_URL') }}'+'/searchStudents';
+            $.ajax({
+                url: this_url,
+                method:'POST',
+                data:{
+                    '_token':'{{ csrf_token() }}',
+                    'search':search
+                },
+                success: function(result){
+                    result=JSON.parse(result);
+
+                    var listHtml="";
+                    $.each(result, function(key,data){
+                        if(action_type=='add'){
+                            var button_html='<div class="col-md-4"><button class="btn btn-success" onclick="enrollStudent('+data.id+')">Enroll</button></div>';
+                        }else{
+                            var button_html='<div class="col-md-4"><button class="btn btn-danger" onclick="removeStudent('+data.id+')">Remove</button></div>';
+
+                        }
+                        listHtml=listHtml+`<div class="row" style="border-radius:10px;border-color:black; padding:15px;">
+                            <div class="col-md-8">
+                                ${data.name} - ${data.student_id}
+                            </div>
+                            ${button_html}
+                        </div>`;
+                    });
+
+                    $("#student-list-search").html(listHtml);
+                }
+            });
+        }
+
+        function enrollStudent(student_id){
+
+            var this_url = '{{ env('APP_URL') }}'+'/enrollStudent';
+            $.ajax({
+                url: this_url,
+                method:'POST',
+                data:{
+                    '_token':'{{ csrf_token() }}',
+                    'student_id':student_id,
+                    'section_id':'{{$details[0]->id}}'
+                },
+                success: function(result){
+                    $("#studentModal").modal("hide");
+                    swal("Student Successfully Enrolled to This Section.");
+
+                    location.reload();
+                }
+            });
+
+        }
+
+        function removeStudent(student_id){
+            var this_url = '{{ env('APP_URL') }}'+'/removeStudent';
+            var section_id='{{$details[0]->id}}';
+            $.ajax({
+                url: this_url,
+                method:'POST',
+                data:{
+                    '_token':'{{ csrf_token() }}',
+                    'student_id':student_id,
+                    'section_id':section_id.toString()
+                },
+                success: function(result){
+                    $("#studentModal").modal("hide");
+                    swal("Student Successfully Removed From This Section.");
+
+                    location.reload();
+                }
+            });
+        }
+
+        function generateQRCode(){
+            var section_id='{{$details[0]->id}}';
+            var this_url = '{{ env('APP_URL') }}'+'/generate-qrcode?sid='+section_id;
+
+            window.open(this_url, "_blank");
+
         }
     </script>
 @endsection

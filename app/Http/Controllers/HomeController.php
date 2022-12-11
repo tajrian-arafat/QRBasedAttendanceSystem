@@ -29,16 +29,65 @@ class HomeController extends Controller
                ->with("courses_data",$courses);
     }
 
+    public function searchStudents(){
+        $search=isset($_POST["search"])?$_POST["search"]:0;
+        $search=isset($_GET["search"])?$_GET["search"]:$search;
+
+        $raw="(name LIKE '%".$search."%' OR student_id LIKE '%".$search."%' OR email LIKE '%".$search."%')";
+        $students=DB::table("qr_students")->whereRaw($raw)->get()->toArray();
+
+        return json_encode($students);
+    }
+
+    public function enrollStudent(){
+        $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
+        $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
+
+        $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
+        $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
+
+        $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+        $getCurrentSection=explode(",",$getCurrentSection);
+        $getCurrentSection[]=(string)$section_id;
+        $getCurrentSection=array_unique($getCurrentSection);
+        $getCurrentSection=implode(",",$getCurrentSection);
+
+        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentSection]);
+    }
+
+    public function removeStudent(){
+
+        $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
+        $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
+        $section_id='"'.$section_id.'"';
+
+        $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
+        $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
+
+        $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+        $getCurrentSection=explode(",",$getCurrentSection);
+
+        $key = array_search($section_id, $getCurrentSection);
+        if($key>-1){
+            unset($getCurrentSection[$key]);
+        }
+        $getCurrentSection=array_values(array_unique($getCurrentSection));
+        $getCurrentSection=implode(",",$getCurrentSection);
+
+        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentSection]);
+
+    }
+
     public function section(){
 
         $section_id=isset($_POST["sid"])?$_POST["sid"]:0;
-        $section_id=isset($_GET["sid"])?$_GET["sid"]:$sid;
+        $section_id=isset($_GET["sid"])?$_GET["sid"]:$section_id;
 
         $course_id=isset($_POST["cid"])?$_POST["cid"]:0;
-        $course_id=isset($_GET["cid"])?$_GET["cid"]:$cid;
+        $course_id=isset($_GET["cid"])?$_GET["cid"]:$course_id;
 
         $details=DB::table("qr_sections")
-                ->select("qr_sections.*","qr_courses.name")
+                ->select("qr_sections.*","qr_courses.name as course_name")
                 ->leftjoin("qr_courses","qr_courses.id","=","qr_sections.course_id")
                 ->where("qr_sections.id",$section_id)
                 ->where("qr_sections.course_id",$course_id)
@@ -48,18 +97,50 @@ class HomeController extends Controller
                 ->select("qr_students.*")
                 ->whereRaw($raw)
                 ->get()->toArray();
-
+        $total_attendances=DB::table("qr_attendance_data")->where("section_id",$section_id)->distinct("date")->count();
         foreach($students as $k=>$student){
-            $students[$k]->attendance_records=DB::table("qr_attendance_data")
-                                ->where("student_id",$student->id)
-                                ->where("section_id",$section_id)
-                                ->orderby("date","desc")
-                                ->get()->toArray();
+            $total_present=DB::table("qr_attendance_data")->where("student_id",$student->id)->where("section_id",$section_id)->where("attendance",1)->count();
+            $students[$k]->percentage=floor(($total_present*100)/$total_attendances);
+
+            $students[$k]->total_attendances=$total_attendances;
+            $students[$k]->total_present=$total_present;
         }
 
         return view('teacher-section')
                 ->with("details",$details)
                ->with("students",$students);
+    }
+
+    public function getStudentAttendance(){
+
+        $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
+        $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
+
+        $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
+        $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
+
+        $attendance_records=DB::table("qr_attendance_data")
+                                ->where("student_id",$student_id)
+                                ->where("section_id",$section_id)
+                                ->orderby("date","desc")
+                                ->get()->toArray();
+
+        return json_encode($attendance_records);
+
+    }
+
+    public function editAttendance(){
+        $attendance_id=isset($_POST["attendance_id"])?$_POST["attendance_id"]:0;
+        $attendance_id=isset($_GET["attendance_id"])?$_GET["attendance_id"]:$attendance_id;
+
+        $attendance=isset($_POST["attendance"])?$_POST["attendance"]:0;
+        $attendance=isset($_GET["attendance"])?$_GET["attendance"]:$attendance;
+
+        DB::table("qr_attendance_data")
+        ->where("id",$attendance_id)
+        ->update([
+            "attendance"=>$attendance
+        ]);
     }
 
     public function sectionList(){

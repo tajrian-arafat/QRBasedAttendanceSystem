@@ -33,7 +33,6 @@
         .wrapper {
             width: 100vw;
             font-family: 'Open Sans', sans-serif;
-            padding: 50px;
         }
 
         .app-wrapper {
@@ -246,60 +245,6 @@
             transform: scale(1.1);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 1;
-            top: 0;
-            left: 0;
-            text-align: center;
-            transition: .2s;
-        }
-
-        .modal.open {
-            display: block;
-        }
-
-        .modal-body {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 35px 15px 25px;
-            z-index: 2;
-            display: inline-block;
-            margin-top: 20%;
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .modal-body h3 {
-            font: 20px/20px 'Open Sans', sans-serif;
-            color: #707584;
-        }
-
-        .modal-control, .modal-close {
-            display: inline-block;
-            float: right;
-            color: #c6cce2;
-            font-size: 45px;
-            line-height: 22px;
-            cursor: pointer;
-            transition: color .1s;
-        }
-
-        .modal-control:hover, .modal-close:hover {
-            color: #8393ca;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            transform: rotate(45deg);
-        }
 
         /* animations */
         @keyframes fade-in {
@@ -393,44 +338,35 @@
 @endsection
 
 @section('content')
-<div class="row">
-        <div class="wrapper" style="min-width:1000px!important;">
-            <div class="app-wrapper">
-
-
-
-            <!--courses-->
-            <aside class="wallet">
-                <h2>My Courses</h2>
-                <div class="modal-control">+</div>
-
-
-
-
-                <div class="pt-4 text-center list-group">
-                    @foreach($courses_data as $course)
-                        <button id="course-list-{{$course->course_id}}" type="button" class="courses list-group-item list-group-item-action" onclick="fetchSectionList('{{$course->course_id}}');">{{$course->name}}</button>
-                    @endforeach
-
-                </div>
-
-                <div class="cards"></div>
-            </aside>
-
-            <content class="transactions-wrapper">
-                <h2>Sections</h2>
-                <div class="pt-4 list-group">
-
-                    <div class="row" style="align:center;" id="section-list">
-                        <b><i>Please Click a Course Name To See Sections</i></b>
-                    </div>
-                </div>
-            </content>
+    <div class="wrapper" style="max-width:1000px!important; padding-top: 100px">
+        <div class="app-wrapper">
+        <!--courses-->
+        <aside class="wallet">
+            <h2>My Courses</h2>
+            <div class="pt-4 text-center list-group">
+                @foreach($courses_data as $course)
+                    <button id="course-list-{{$course->course_id}}" type="button" class="courses list-group-item list-group-item-action" onclick="fetchSectionList('{{$course->course_id}}');">{{$course->name}}</button>
+                @endforeach
 
             </div>
 
+            <div class="cards"></div>
+        </aside>
+
+        <content class="transactions-wrapper">
+            <h2>Sections</h2>
+            <div class="pt-4 list-group">
+
+                <div class="row" style="align:center;" id="section-list">
+                    <b><i>Please Click a Course Name To See Sections</i></b>
+                </div>
+            </div>
+        </content>
+
         </div>
-</div>
+
+    </div>
+
 @endsection
 
 @section('scripts')
