@@ -106,18 +106,26 @@ class QrCodeController extends Controller
             $sqlUsed[]="SELECT COUNT(*) FROM qr_validation_storage WHERE qr_section_id=? AND qr_hash=?";
 
             if($checkQRvalidity>0){
-                DB::table("qr_attendance_data")
-                    ->where("student_id",$student_id)
-                    ->where("section_id",$section_id)
-                    ->where("date",$date)
-                    ->update([
-                        "attendance"=>1,
-                        "device_id"=>$device_id
-                    ]);
+                $raw="section_ids LIKE '%".$section_id."%'";
+                $checkStudentValidity=DB::table("qr_students")->where("id",$student_id)->whereRaw($raw)->count();
+                
+                if($checkStudentValidity>0){
+                    DB::table("qr_attendance_data")
+                        ->where("student_id",$student_id)
+                        ->where("section_id",$section_id)
+                        ->where("date",$date)
+                        ->update([
+                            "attendance"=>1,
+                            "device_id"=>$device_id
+                        ]);
 
-                $sqlUsed[]="UPDATE qr_attendance_data SET attendance=1, device_id=? WHERE student_id=? AND section_id=? AND date=?";
+                    $sqlUsed[]="UPDATE qr_attendance_data SET attendance=1, device_id=? WHERE student_id=? AND section_id=? AND date=?";
 
-                $returnMessage=$returnMessage."Attendance Successfully Added. Thanks for being at Class.";
+                    $returnMessage=$returnMessage."Attendance Successfully Added. Thanks for being at Class.";
+                }else{
+                    $returnMessage=$returnMessage."Student Id Does not belong to This Section. Invalid Student.";
+                }
+                
             }else{
                 $statusCode=200;
                 $returnMessage=$returnMessage."Wrong/Old QR Detected.Please Try again with Current QR Code.";
