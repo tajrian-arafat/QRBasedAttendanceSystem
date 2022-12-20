@@ -25,7 +25,7 @@
     var qr_count=0;
     $(document ).ready(function() {
         makeRequest();
-        setInterval(makeRequest, (3 * 1000));
+        // setInterval(makeRequest, (3 * 1000));
 
     });
 
