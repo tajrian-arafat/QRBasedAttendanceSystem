@@ -88,7 +88,7 @@ class QrCodeController extends Controller
 
         $date=date('Y-m-d', strtotime("+6 hours"));
 
-        $returnMessage=$student_id."-".$device_id."-".$qr_data;
+        $returnMessage=$student_id."-".$device_id."-".$qr_data_full;
         $statusCode=200;
 
         $sqlUsed=array();
