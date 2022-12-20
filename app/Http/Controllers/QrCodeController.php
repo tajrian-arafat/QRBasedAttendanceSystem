@@ -85,7 +85,7 @@ class QrCodeController extends Controller
 
         if($checkDeviceExists==0){
 
-            $checkQRvalidity=DB::table("qr_validation_storage")->where("section_id",$section_id)->where("qr_hash",$qr_data_full)->count();
+            $checkQRvalidity=DB::table("qr_validation_storage")->where("qr_section_id",$section_id)->where("qr_hash",$qr_data_full)->count();
 
             if($checkQRvalidity>0){
                 DB::table("qr_attendance_data")
