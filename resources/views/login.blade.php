@@ -33,6 +33,8 @@
             var password=$("#password").val();
 
             var this_url= '{{ env('APP_URL') }}'+'/teacher-login';
+            
+            //API Connection
 
             $.ajax({
                 url:this_url,

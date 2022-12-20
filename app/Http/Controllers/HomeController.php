@@ -22,11 +22,12 @@ class HomeController extends Controller
         $email=isset($_GET["email"])?$_GET["email"]:$email;
 
         $password=isset($_POST["password"])?$_POST["password"]:0;
-        $password=isset($_GET["searpasswordch"])?$_GET["password"]:$password;
+        $password=isset($_GET["password"])?$_GET["password"]:$password;
 
         $sqlUsed=array();
 
         $userCheck=DB::table('qr_teachers')->where('email',$email)->where('password',$password)->limit(1)->get()->toArray();
+
         $sqlUsed[]="SELECT * FROM qr_teachers WHERE email=? AND password=? LIMIT 1";
 
         $status=200;
@@ -41,13 +42,7 @@ class HomeController extends Controller
 
     public function home(){
 
-        // Hardcode for login Teacher = Teacher 1 --- Later we will implement proper login Auth;
         $teacher_id=session('teacher_id');
-
-        // $sql=`SELECT qr_sections.course_id, qr_courses.name FROM qr_sections
-        // LEFT JOIN qr_courses ON qr_courses.id=qr_sections.course_id
-        // WHERE teacher_id=1`;
-        //DB::select($sql);
 
         $courses=DB::table("qr_sections")
                 ->select("qr_sections.course_id","qr_courses.name")
@@ -83,6 +78,9 @@ class HomeController extends Controller
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
         $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+
+        $sqlUsed[]="SELECT section_ids FROM qr_students WHERE id=".$student_id;
+
         $getCurrentSection=explode(",",$getCurrentSection);
         $getCurrentSection[]=(string)$section_id;
         $getCurrentSection=array_unique($getCurrentSection);
@@ -95,6 +93,12 @@ class HomeController extends Controller
 
     public function removeStudent(){
 
+        /*
+            -- Called from teacher-section.blade with ajax from function removeStudent
+            -- Paased section_id and student_id
+            -- 
+        */
+
         $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
         $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
         $section_id='"'.$section_id.'"';
@@ -103,6 +107,8 @@ class HomeController extends Controller
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
         $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+        $sqlUsed[]="SELECT section_ids FROM qr_students WHERE id=".$student_id;
+
         $getCurrentSection=explode(",",$getCurrentSection);
 
         $key = array_search($section_id, $getCurrentSection);
