@@ -20,6 +20,9 @@ Route::get('/logout', [HomeController::class, 'logout']);
 Route::get('/teacher-login', [HomeController::class, 'teacherLogin']);
 Route::post('/teacher-login', [HomeController::class, 'teacherLogin']);
 
+Route::get('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
+Route::post('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
+
 Route::middleware([sessionChecker::class])->group(function(){
 
     Route::get('/home', [HomeController::class, 'home']);
@@ -51,8 +54,7 @@ Route::middleware([sessionChecker::class])->group(function(){
 
 });
 
-Route::get('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
-Route::post('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
+
 
 
 
