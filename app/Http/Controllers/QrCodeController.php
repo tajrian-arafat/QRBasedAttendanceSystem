@@ -26,6 +26,8 @@ class QrCodeController extends Controller
         $date=date('Y-m-d', strtotime("+6 hours"));
 
         $random_number=$section_salting."-".time()*time();
+        $random_number=(String)$random_number;
+        
         $myQR=QrCode::size(300)->generate($random_number);
 
         $sqlUsed=array();
