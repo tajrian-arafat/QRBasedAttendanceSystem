@@ -88,7 +88,7 @@ class QrCodeController extends Controller
 
         $date=date('Y-m-d', strtotime("+6 hours"));
 
-        $returnMessage="";
+        $returnMessage=$student_id."-".$device_id."-".$qr_data;
         $statusCode=200;
 
         $sqlUsed=array();
@@ -115,17 +115,17 @@ class QrCodeController extends Controller
 
                 $sqlUsed[]="UPDATE qr_attendance_data SET attendance=1, device_id=? WHERE student_id=? AND section_id=? AND date=?";
 
-                $returnMessage="Attendance Successfully Added. Thanks for being at Class.";
+                $returnMessage=$returnMessage."Attendance Successfully Added. Thanks for being at Class.";
             }else{
                 $statusCode=200;
-                $returnMessage="Wrong/Old QR Detected.Please Try again with Current QR Code.";
+                $returnMessage=$returnMessage."Wrong/Old QR Detected.Please Try again with Current QR Code.";
 
                 //Attendance Attempt with Wrong/Old QR -- May be shared picture with friends.
             }
 
         }else{
             $statusCode=200;
-            $returnMessage="Proxy Attendance Attempt Detected. Better Luck Next Time.";
+            $returnMessage=$returnMessage."Proxy Attendance Attempt Detected. Better Luck Next Time.";
 
             //Duplicate Attendance Attempt Detected.
         }
