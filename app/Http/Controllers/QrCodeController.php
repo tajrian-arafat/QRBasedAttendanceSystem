@@ -28,16 +28,19 @@ class QrCodeController extends Controller
         $random_number=$section_salting."-".time()*time();
         $myQR=QrCode::size(300)->generate($random_number);
 
+        $sqlUsed=array();
+
         DB::table("qr_validation_storage")
                      ->where("qr_section_id",$section_id)
                      ->delete();
-
+        $sqlUsed[]="DELETE FROM qr_validation_storage WHERE qr_section_id=?";
         DB::table("qr_validation_storage")
             ->insert([
                 "create_datetime" => $datetime,
                 "qr_hash"=>$random_number,
                 "qr_section_id"=>$section_id
             ]);
+        $sqlUsed[]="INSERT INTO qr_validation_storage (create_datetime,qr_hash,qr_section_id) VALUES (?,?,?)";
 
         $checkRecord=DB::table("qr_attendance_data")->where("section_id",$section_id)->where('date',$date)->count();
         if($checkRecord==0){
@@ -46,6 +49,8 @@ class QrCodeController extends Controller
                     ->select("qr_students.id")
                     ->whereRaw($raw)
                     ->get()->toArray();
+
+            $sqlUsed[]='SELECT qr_students.id FROM qr_students WHERE section_ids LIKE %"?"%';
 
             $attendanceArray=array();
             foreach($students as $k=>$student){
@@ -56,6 +61,8 @@ class QrCodeController extends Controller
             }
 
             DB::table("qr_attendance_data")->insert($attendanceArray);
+
+            $sqlUsed[]="INSERT INTO qr_attendance_data (date,section_id,attendance,student_id) VALUES (?,?,?,?)";
         }
 
         return $myQR;
@@ -81,11 +88,17 @@ class QrCodeController extends Controller
         $returnMessage="";
         $statusCode=200;
 
+        $sqlUsed=array();
+
         $checkDeviceExists=DB::table("qr_attendance_data")->where("section_id",$section_id)->where("date",$date)->where("device_id",$device_id)->count();
+
+        $sqlUsed[]="SELECT COUNT(*) FROM qr_attendance_data WHERE section_id=? AND date=? AND device_id=?";
 
         if($checkDeviceExists==0){
 
             $checkQRvalidity=DB::table("qr_validation_storage")->where("qr_section_id",$section_id)->where("qr_hash",$qr_data_full)->count();
+
+            $sqlUsed[]="SELECT COUNT(*) FROM qr_validation_storage WHERE qr_section_id=? AND qr_hash=?";
 
             if($checkQRvalidity>0){
                 DB::table("qr_attendance_data")
@@ -96,6 +109,9 @@ class QrCodeController extends Controller
                         "attendance"=>1,
                         "device_id"=>$device_id
                     ]);
+
+                $sqlUsed[]="UPDATE qr_attendance_data SET attendance=1, device_id=? WHERE student_id=? AND section_id=? AND date=?";
+
                 $returnMessage="Attendance Successfully Added. Thanks for being at Class.";
             }else{
                 $statusCode=200;

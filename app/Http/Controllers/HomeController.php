@@ -71,6 +71,7 @@ class HomeController extends Controller
     public function enrollStudent(){
         $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
         $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
+        $section_id='"'.$section_id.'"';
 
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
@@ -129,7 +130,12 @@ class HomeController extends Controller
         $total_attendances=DB::table("qr_attendance_data")->where("section_id",$section_id)->distinct("date")->count();
         foreach($students as $k=>$student){
             $total_present=DB::table("qr_attendance_data")->where("student_id",$student->id)->where("section_id",$section_id)->where("attendance",1)->count();
-            $students[$k]->percentage=floor(($total_present*100)/$total_attendances);
+
+            if($total_attendances>0){
+                $students[$k]->percentage=floor(($total_present*100)/$total_attendances);
+            }else{
+                $students[$k]->percentage=floor($total_present*100);
+            }
 
             $students[$k]->total_attendances=$total_attendances;
             $students[$k]->total_present=$total_present;
