@@ -140,7 +140,7 @@ class HomeController extends Controller
 
         $sqlUsed[]="SELECT qr_sections.*,qr_courses.name AS course_name FROM qr_sections LEFT JOIN qr_courses ON qr_courses.id=qr_sections.course_id WHERE qr_sections.id=? AND qr_sections.course_id=?";
 
-        $raw="section_ids LIKE '%".$section_id."%'";
+        $raw="section_ids LIKE '%\"".$section_id."\"%'";
         $students=DB::table("qr_students")
                 ->select("qr_students.*")
                 ->whereRaw($raw)
