@@ -25,9 +25,9 @@ class QrCodeController extends Controller
         $datetime=date('Y-m-d H:i:s', strtotime("+6 hours"));
         $date=date('Y-m-d', strtotime("+6 hours"));
 
-        $random_number=$section_salting."-".time();
+        $random_number=$section_salting."-".time()*time();
         $random_number=(String)$random_number;
-        dump($random_number);
+
         $myQR=QrCode::size(300)->generate($random_number);
 
         $sqlUsed=array();
@@ -66,7 +66,7 @@ class QrCodeController extends Controller
 
             $sqlUsed[]="INSERT INTO qr_attendance_data (date,section_id,attendance,student_id) VALUES (?,?,?,?)";
         }
-        dump($random_number);
+
         return $myQR;
     }
 
@@ -90,7 +90,7 @@ class QrCodeController extends Controller
 
         $date=date('Y-m-d', strtotime("+6 hours"));
 
-        $returnMessage=$student_id."-".$device_id."-".$qr_data_full;
+        $returnMessage="";
         $statusCode=200;
 
         $sqlUsed=array();
