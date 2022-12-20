@@ -63,17 +63,18 @@ class QrCodeController extends Controller
 
     public function giveAttendance(){
 
-        $section_id=isset($_POST["sid"])?$_POST["sid"]:0;
-        $section_id=isset($_GET["sid"])?$_GET["sid"]:$sid;
-
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
         $device_id=isset($_POST["device_id"])?$_POST["device_id"]:0;
         $device_id=isset($_GET["device_id"])?$_GET["device_id"]:$device_id;
 
-        $qr_hash=isset($_POST["qr_hash"])?$_POST["qr_hash"]:"";
-        $qr_hash=isset($_GET["qr_hash"])?$_GET["qr_hash"]:$qr_hash;
+        $qr_data_full=isset($_POST["qr_data"])?$_POST["qr_data"]:"";
+        $qr_data_full=isset($_GET["qr_data"])?$_GET["qr_data"]:$qr_data_full;
+        $qr_data=explode("-",$qr_data_full);
+
+        $qr_hash=isset($qr_data[1])?$qr_data[1]:"";
+        $section_id=isset($qr_data[0])?(int)$qr_data[0]/1999:"";
 
         $date=date('Y-m-d', strtotime("+6 hours"));
 
@@ -84,7 +85,7 @@ class QrCodeController extends Controller
 
         if($checkDeviceExists==0){
 
-            $checkQRvalidity=DB::table("qr_validation_storage")->where("section_id",$section_id)->where("qr_hash",$qr_hash)->count();
+            $checkQRvalidity=DB::table("qr_validation_storage")->where("section_id",$section_id)->where("qr_hash",$qr_data_full)->count();
 
             if($checkQRvalidity>0){
                 DB::table("qr_attendance_data")
@@ -97,20 +98,20 @@ class QrCodeController extends Controller
                     ]);
                 $returnMessage="Attendance Successfully Added. Thanks for being at Class.";
             }else{
-                $statusCode=400;
-                $returnMessage="Wrong/Old QR Detected.Please Try with Current QR Code.";
+                $statusCode=200;
+                $returnMessage="Wrong/Old QR Detected.Please Try again with Current QR Code.";
 
                 //Attendance Attempt with Wrong/Old QR -- May be shared picture with friends.
             }
 
         }else{
-            $statusCode=400;
+            $statusCode=200;
             $returnMessage="Proxy Attendance Attempt Detected. Better Luck Next Time.";
 
             //Duplicate Attendance Attempt Detected.
         }
 
-        $returnArray=array("status"=>$statusCode, "message"=>$returnMessage);
+        $returnArray=array("statusCode"=>$statusCode, "message"=>$returnMessage);
 
         return json_encode($returnArray);
     }
