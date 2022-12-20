@@ -73,6 +73,9 @@ class QrCodeController extends Controller
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
+        $student_id=DB::table("qr_students")->where("student_id",$student_id)->value("id");
+        $sqlUsed[]="SELECT id FROM qr_students WHERE student_id=?";
+
         $device_id=isset($_POST["device_id"])?$_POST["device_id"]:0;
         $device_id=isset($_GET["device_id"])?$_GET["device_id"]:$device_id;
 
