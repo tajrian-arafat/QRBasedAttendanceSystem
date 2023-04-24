@@ -75,7 +75,20 @@
                     <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:70px;">
                         <button class="btn btn-danger" onclick="logout();">Logout</button>
                     </div>
+                @elseif(session('admin_id'))
+                    <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:70px;">
+                        <button class="btn btn-danger" onclick="adminlogout();">Logout</button>
+                    </div>
+                @elseif($teacher == 1)
+                    <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:120px;">
+                        <button class="btn btn-warning" onclick="adminlogin();">Admin Login</button>
+                    </div>
+                @elseif($teacher == 0 )
+                    <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:120px;">
+                        <button class="btn btn-warning" onclick="teacherlogin();">Teacher Login</button>
+                    </div>
                 @endif
+
             </div>
         </div>
     </header>
@@ -122,6 +135,24 @@
     <script>
         function logout(){
             var this_url = '{{ env('APP_URL') }}'+'/logout';
+
+            window.location.href=this_url;
+        }
+
+        function adminlogout(){
+            var this_url = '{{ env('APP_URL') }}'+'/adminlogout';
+
+            window.location.href=this_url;
+        }
+
+        function adminlogin(){
+            var this_url = '{{ env('APP_URL') }}'+'/adminlogin';
+
+            window.location.href=this_url;
+        }
+
+        function teacherlogin(){
+            var this_url = '{{ env('APP_URL') }}'+'/login';
 
             window.location.href=this_url;
         }

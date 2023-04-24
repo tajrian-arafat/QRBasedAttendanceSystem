@@ -16,7 +16,7 @@ class sessionChecker
      */
     public function handle(Request $request, Closure $next)
     {
-        if(session('teacher_id')){
+        if(session('teacher_id') || session('admin_id')){
             return $next($request);
         }
         abort(403);

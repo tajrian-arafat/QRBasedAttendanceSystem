@@ -9,12 +9,45 @@ class HomeController extends Controller
 {
     public function login(){
 
-        return view('login');
+        return view('login')->with("teacher",1);
+    }
+
+    public function adminlogin(){
+
+        return view('adminlogin')->with("teacher",0);
+    }
+
+    public function adminsLogin(){
+        $email=isset($_POST["email"])?$_POST["email"]:0;
+        $email=isset($_GET["email"])?$_GET["email"]:$email;
+
+        $password=isset($_POST["password"])?$_POST["password"]:0;
+        $password=isset($_GET["password"])?$_GET["password"]:$password;
+
+        $sqlUsed=array();
+
+        $userCheck=DB::table('qr_admins')->where('email',$email)->where('password',$password)->limit(1)->get()->toArray();
+
+        $sqlUsed[]="SELECT * FROM qr_admins WHERE email=? AND password=? LIMIT 1";
+
+        $status=200;
+        if(empty($userCheck)){
+            $status=400;
+        }else{
+            session(['admin_id' =>$userCheck[0]->id]);
+        }
+
+        return json_encode(array("status"=>$status,"data"=>$userCheck));
+    }
+
+    public function adminlogout(){
+        session()->forget('admin_id');
+        return view('adminlogin')->with("teacher",0);
     }
 
     public function logout(){
         session()->forget('teacher_id');
-        return view('login');
+        return view('login')->with("teacher",1);
     }
 
     public function teacherLogin(){
@@ -58,6 +91,19 @@ class HomeController extends Controller
                ->with("courses_data",$courses);
     }
 
+    public function adminhome(){
+
+        $admin_id=session('admin_id');
+
+        $teachers=DB::table("qr_teachers")
+                ->select("qr_teachers.*")
+                ->get()->toArray();
+
+        return view('admin-home')
+               ->with("admin_id",$admin_id)
+               ->with("teachers_data",$teachers);
+    }
+
     public function searchStudents(){
         $search=isset($_POST["search"])?$_POST["search"]:0;
         $search=isset($_GET["search"])?$_GET["search"]:$search;
@@ -67,6 +113,28 @@ class HomeController extends Controller
 
         $sqlUsed[]="SELECT * FROM qr_students WHERE name LIKE '%".$search."%' OR student_id LIKE '%".$search."%' OR email LIKE '%".$search."%'";
         return json_encode($students);
+    }
+
+    public function addTeacher(){
+
+        $name=isset($_POST["name"])?$_POST["name"]:"";
+        $name=isset($_GET["name"])?$_GET["name"]:$name;
+
+        $email=isset($_POST["email"])?$_POST["email"]:"";
+        $email=isset($_GET["email"])?$_GET["email"]:$email;
+
+        $password=isset($_POST["password"])?$_POST["password"]:"";
+        $password=isset($_GET["password"])?$_GET["password"]:$password;
+
+        if(!empty($name) && !empty($email) && !empty($password)){
+            DB::table("qr_teachers")
+                ->insert([
+                    "name" => $name,
+                    "email" => $email,
+                    "password" => $password,
+                ]);
+        }
+
     }
 
     public function enrollStudent(){

@@ -14,11 +14,19 @@ use App\Http\Middleware\sessionChecker;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/adminlogin', [HomeController::class, 'adminlogin']);
+Route::get('/adminlogout', [HomeController::class, 'adminlogout']);
+
+
 Route::get('/login', [HomeController::class, 'login']);
 Route::get('/logout', [HomeController::class, 'logout']);
 
 Route::get('/teacher-login', [HomeController::class, 'teacherLogin']);
 Route::post('/teacher-login', [HomeController::class, 'teacherLogin']);
+
+Route::get('/admin-login', [HomeController::class, 'adminsLogin']);
+Route::post('/admin-login', [HomeController::class, 'adminsLogin']);
 
 Route::get('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
 Route::post('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
@@ -26,6 +34,11 @@ Route::post('/giveAttendance', [QrCodeController::class, 'giveAttendance']);
 Route::middleware([sessionChecker::class])->group(function(){
 
     Route::get('/home', [HomeController::class, 'home']);
+    Route::get('/adminhome', [HomeController::class, 'adminhome']);
+
+    Route::get('/addTeacher', [HomeController::class, 'addTeacher']);
+    Route::post('/addTeacher', [HomeController::class, 'addTeacher']);
+
     Route::get('/section', [HomeController::class, 'section']);
 
     Route::get('/getSections', [HomeController::class, 'sectionList']);
