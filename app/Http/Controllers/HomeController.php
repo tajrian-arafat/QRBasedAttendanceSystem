@@ -146,7 +146,7 @@ class HomeController extends Controller
                 ->whereRaw($raw)
                 ->get()->toArray();
 
-        $sqlUsed[]="SELECT qr_students.* FROM qr_students WHERE qr_students.section_ids LIKE '%".$section_id."%'";
+        $sqlUsed[]="SELECT qr_students.* FROM qr_students WHERE qr_students.section_ids LIKE '%\"".$section_id."\"%'";
 
         $total_attendances=DB::table("qr_attendance_data")->where("section_id",$section_id)->distinct("date")->count();
 
