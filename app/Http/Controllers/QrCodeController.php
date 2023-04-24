@@ -26,7 +26,7 @@ class QrCodeController extends Controller
         $date=date('Y-m-d', strtotime("+6 hours"));
 
         $random_number=$section_salting."-".time()*time();
-        $random_number=(String)$random_number;
+        //$random_number=(String)$random_number;
 
         $myQR=QrCode::size(300)->generate($random_number);
 
@@ -36,6 +36,7 @@ class QrCodeController extends Controller
                      ->where("qr_section_id",$section_id)
                      ->delete();
         $sqlUsed[]="DELETE FROM qr_validation_storage WHERE qr_section_id=?";
+
         DB::table("qr_validation_storage")
             ->insert([
                 "create_datetime" => $datetime,
@@ -108,7 +109,7 @@ class QrCodeController extends Controller
             if($checkQRvalidity>0){
                 $raw="section_ids LIKE '%".$section_id."%'";
                 $checkStudentValidity=DB::table("qr_students")->where("id",$student_id)->whereRaw($raw)->count();
-                
+
                 if($checkStudentValidity>0){
                     DB::table("qr_attendance_data")
                         ->where("student_id",$student_id)
