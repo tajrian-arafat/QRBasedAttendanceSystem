@@ -104,7 +104,7 @@ class HomeController extends Controller
                ->with("teachers_data",$teachers);
     }
 
-    public function searchStudents(){
+    public function searchAttendees(){
         $search=isset($_POST["search"])?$_POST["search"]:0;
         $search=isset($_GET["search"])?$_GET["search"]:$search;
 
@@ -137,7 +137,7 @@ class HomeController extends Controller
 
     }
 
-    public function enrollStudent(){
+    public function enrollAttendee(){
         $section_id=isset($_POST["section_id"])?$_POST["section_id"]:0;
         $section_id=isset($_GET["section_id"])?$_GET["section_id"]:$section_id;
         $section_id='"'.$section_id.'"';
@@ -159,10 +159,10 @@ class HomeController extends Controller
         $sqlUsed[]="UPDATE qr_students SET section_ids=? WHERE id=".$student_id;
     }
 
-    public function removeStudent(){
+    public function removeAttendee(){
 
         /*
-            -- Called from teacher-section.blade with ajax from function removeStudent
+            -- Called from teacher-section.blade with ajax from function removeAttendee
             -- Paased section_id and student_id
             -- 
         */
@@ -240,7 +240,7 @@ class HomeController extends Controller
                ->with("students",$students);
     }
 
-    public function getStudentAttendance(){
+    public function getAttendeeAttendance(){
 
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;

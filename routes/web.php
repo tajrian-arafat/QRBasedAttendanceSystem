@@ -44,20 +44,20 @@ Route::middleware([sessionChecker::class])->group(function(){
     Route::get('/getSections', [HomeController::class, 'sectionList']);
     Route::post('/getSections', [HomeController::class, 'sectionList']);
 
-    Route::get('/getStudentAttendance', [HomeController::class, 'getStudentAttendance']);
-    Route::post('/getStudentAttendance', [HomeController::class, 'getStudentAttendance']);
+    Route::get('/getAttendeeAttendance', [HomeController::class, 'getAttendeeAttendance']);
+    Route::post('/getAttendeeAttendance', [HomeController::class, 'getAttendeeAttendance']);
 
     Route::get('/editAttendance', [HomeController::class, 'editAttendance']);
     Route::post('/editAttendance', [HomeController::class, 'editAttendance']);
 
-    Route::get('/searchStudents', [HomeController::class, 'searchStudents']);
-    Route::post('/searchStudents', [HomeController::class, 'searchStudents']);
+    Route::get('/searchAttendees', [HomeController::class, 'searchAttendees']);
+    Route::post('/searchAttendees', [HomeController::class, 'searchAttendees']);
 
-    Route::get('/enrollStudent', [HomeController::class, 'enrollStudent']);
-    Route::post('/enrollStudent', [HomeController::class, 'enrollStudent']);
+    Route::get('/enrollAttendee', [HomeController::class, 'enrollAttendee']);
+    Route::post('/enrollAttendee', [HomeController::class, 'enrollAttendee']);
 
-    Route::get('/removeStudent', [HomeController::class, 'removeStudent']);
-    Route::post('/removeStudent', [HomeController::class, 'removeStudent']);
+    Route::get('/removeAttendee', [HomeController::class, 'removeAttendee']);
+    Route::post('/removeAttendee', [HomeController::class, 'removeAttendee']);
 
     Route::get('/generate-qrcode', [QrCodeController::class, 'index']);
     Route::post('/generate-qrcode', [QrCodeController::class, 'index']);

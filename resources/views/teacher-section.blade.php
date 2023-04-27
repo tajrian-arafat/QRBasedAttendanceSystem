@@ -346,7 +346,7 @@
             <div class="pt-4 text-center list-group">
                 <button type="button" class="list-group-item list-group-item-action" onclick="generateQRCode();">Generate QR Code</button>
                 <button type="button" class="list-group-item list-group-item-action" onclick="studentModal('add');">Add student</button>
-                <button type="button" class="list-group-item list-group-item-action" onclick="studentModal('remove');">Remove Student</button>
+                <button type="button" class="list-group-item list-group-item-action" onclick="studentModal('remove');">Remove Attendee</button>
 
             </div>
 
@@ -356,14 +356,14 @@
 
 
         <content class="transactions-wrapper">
-            <h2>Student List</h2>
+            <h2>Attendee List</h2>
             <div class="pt-4 list-group">
 
                 <table class="table" style="min-width:140%;">
                     <thead>
                         <tr>
-                        <th scope="col">Student Name</th>
-                        <th scope="col">Student Id</th>
+                        <th scope="col">Attendee Name</th>
+                        <th scope="col">Attendee Id</th>
                         <th scope="col">Percentage</th>
                         <th scope="col">Details</th>
                         </tr>
@@ -374,7 +374,7 @@
                                 <td>{{$student->name}}</td>
                                 <td>{{$student->student_id}}</td>
                                 <td>{{$student->percentage}} ({{$student->total_present}}/{{$student->total_attendances}})</td>
-                                <td onclick="fetchStudentAttendance('{{$student->id}}','{{$details[0]->id}}','{{$student->student_id}}');"><span class="material-icons" style="color:green; cursor:pointer;">manage_accounts</span></td>
+                                <td onclick="fetchAttendeeAttendance('{{$student->id}}','{{$details[0]->id}}','{{$student->student_id}}');"><span class="material-icons" style="color:green; cursor:pointer;">manage_accounts</span></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -392,7 +392,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="studentModalLabel">Search Student Database</h5>
+        <h5 class="modal-title" id="studentModalLabel">Search Attendee Database</h5>
       </div>
       <div class="modal-body">
       <table class="table table-dark">
@@ -405,7 +405,7 @@
                     <input type="text" class="form-control" placeholder="Search with student ID/Name/Email" id="student-search"/>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-primary" onclick="searchStudent();">Search</button>
+                    <button type="button" class="btn btn-primary" onclick="searchAttendee();">Search</button>
                     <input type="hidden" id="action-type"/>
                 </div>
             </div>
@@ -464,11 +464,11 @@
             $("#studentModal").modal("show");
         }
 
-        function fetchStudentAttendance(student_id,section_id,student_ref_id) {
+        function fetchAttendeeAttendance(student_id,section_id,student_ref_id) {
 
-            $("#modal-title").html("Student ID: "+student_ref_id);
+            $("#modal-title").html("Attendee ID: "+student_ref_id);
 
-            var this_url = '{{ env('APP_URL') }}'+'/getStudentAttendance';
+            var this_url = '{{ env('APP_URL') }}'+'/getAttendeeAttendance';
             $.ajax({
                 url: this_url,
                 method:'POST',
@@ -534,11 +534,11 @@
 
         }
 
-        function searchStudent(){
+        function searchAttendee(){
             var search=$("#student-search").val();
             var action_type=$("#action-type").val();
 
-            var this_url = '{{ env('APP_URL') }}'+'/searchStudents';
+            var this_url = '{{ env('APP_URL') }}'+'/searchAttendees';
             $.ajax({
                 url: this_url,
                 method:'POST',
@@ -552,9 +552,9 @@
                     var listHtml="";
                     $.each(result, function(key,data){
                         if(action_type=='add'){
-                            var button_html='<div class="col-md-4"><button class="btn btn-success" onclick="enrollStudent('+data.id+')">Enroll</button></div>';
+                            var button_html='<div class="col-md-4"><button class="btn btn-success" onclick="enrollAttendee('+data.id+')">Enroll</button></div>';
                         }else{
-                            var button_html='<div class="col-md-4"><button class="btn btn-danger" onclick="removeStudent('+data.id+')">Remove</button></div>';
+                            var button_html='<div class="col-md-4"><button class="btn btn-danger" onclick="removeAttendee('+data.id+')">Remove</button></div>';
 
                         }
                         listHtml=listHtml+`<div class="row" style="border-radius:10px;border-color:black; padding:15px;">
@@ -570,9 +570,9 @@
             });
         }
 
-        function enrollStudent(student_id){
+        function enrollAttendee(student_id){
 
-            var this_url = '{{ env('APP_URL') }}'+'/enrollStudent';
+            var this_url = '{{ env('APP_URL') }}'+'/enrollAttendee';
             $.ajax({
                 url: this_url,
                 method:'POST',
@@ -583,7 +583,7 @@
                 },
                 success: function(result){
                     $("#studentModal").modal("hide");
-                    swal("Student Successfully Enrolled to This Section.");
+                    swal("Attendee Successfully Enrolled to This Section.");
 
                     location.reload();
                 }
@@ -591,8 +591,8 @@
 
         }
 
-        function removeStudent(student_id){
-            var this_url = '{{ env('APP_URL') }}'+'/removeStudent';
+        function removeAttendee(student_id){
+            var this_url = '{{ env('APP_URL') }}'+'/removeAttendee';
             var section_id='{{$details[0]->id}}';
             $.ajax({
                 url: this_url,
@@ -604,7 +604,7 @@
                 },
                 success: function(result){
                     $("#studentModal").modal("hide");
-                    swal("Student Successfully Removed From This Section.");
+                    swal("Attendee Successfully Removed From This Section.");
 
                     location.reload();
                 }

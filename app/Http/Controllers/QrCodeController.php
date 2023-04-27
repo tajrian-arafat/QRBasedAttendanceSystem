@@ -108,9 +108,9 @@ class QrCodeController extends Controller
 
             if($checkQRvalidity>0){
                 $raw="section_ids LIKE '%".$section_id."%'";
-                $checkStudentValidity=DB::table("qr_students")->where("id",$student_id)->whereRaw($raw)->count();
+                $checkAttendeeValidity=DB::table("qr_students")->where("id",$student_id)->whereRaw($raw)->count();
 
-                if($checkStudentValidity>0){
+                if($checkAttendeeValidity>0){
                     DB::table("qr_attendance_data")
                         ->where("student_id",$student_id)
                         ->where("section_id",$section_id)
@@ -124,7 +124,7 @@ class QrCodeController extends Controller
 
                     $returnMessage=$returnMessage."Attendance Successfully Added. Thanks for being at Class.";
                 }else{
-                    $returnMessage=$returnMessage."Student Id Does not belong to This Section. Invalid Student.";
+                    $returnMessage=$returnMessage."Attendee Id Does not belong to This Section. Invalid Attendee.";
                 }
                 
             }else{
