@@ -69,16 +69,16 @@ insert  into qr_courses(id,name) values
 (5,'CSE331');
 
 insert  into qr_sections(id,name,course_id,teacher_id) values 
-(1,'Section 1',1,1),
-(2,'Section 2',1,3),
-(3,'Section 1',2,3),
-(4,'Section 2',2,4),
-(5,'Section 1',3,3),
-(6,'Section 2',3,4),
-(7,'Section 1',4,3),
-(8,'Section 2',4,4),
-(9,'Section 1',5,3),
-(10,'Section B',5,4);
+(1,'Group 1',1,1),
+(2,'Group 2',1,3),
+(3,'Group 1',2,3),
+(4,'Group 2',2,4),
+(5,'Group 1',3,3),
+(6,'Group 2',3,4),
+(7,'Group 1',4,3),
+(8,'Group 2',4,4),
+(9,'Group 1',5,3),
+(10,'Group B',5,4);
 
 begin;
 set transaction read write;

@@ -145,16 +145,16 @@ class HomeController extends Controller
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
-        $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+        $getCurrentGroup=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
 
         $sqlUsed[]="SELECT section_ids FROM qr_students WHERE id=".$student_id;
 
-        $getCurrentSection=explode(",",$getCurrentSection);
-        $getCurrentSection[]=(string)$section_id;
-        $getCurrentSection=array_unique($getCurrentSection);
-        $getCurrentSection=implode(",",$getCurrentSection);
+        $getCurrentGroup=explode(",",$getCurrentGroup);
+        $getCurrentGroup[]=(string)$section_id;
+        $getCurrentGroup=array_unique($getCurrentGroup);
+        $getCurrentGroup=implode(",",$getCurrentGroup);
 
-        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentSection]);
+        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentGroup]);
 
         $sqlUsed[]="UPDATE qr_students SET section_ids=? WHERE id=".$student_id;
     }
@@ -174,19 +174,19 @@ class HomeController extends Controller
         $student_id=isset($_POST["student_id"])?$_POST["student_id"]:0;
         $student_id=isset($_GET["student_id"])?$_GET["student_id"]:$student_id;
 
-        $getCurrentSection=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
+        $getCurrentGroup=DB::table("qr_students")->where("id",$student_id)->value("section_ids");
         $sqlUsed[]="SELECT section_ids FROM qr_students WHERE id=".$student_id;
 
-        $getCurrentSection=explode(",",$getCurrentSection);
+        $getCurrentGroup=explode(",",$getCurrentGroup);
 
-        $key = array_search($section_id, $getCurrentSection);
+        $key = array_search($section_id, $getCurrentGroup);
         if($key>-1){
-            unset($getCurrentSection[$key]);
+            unset($getCurrentGroup[$key]);
         }
-        $getCurrentSection=array_values(array_unique($getCurrentSection));
-        $getCurrentSection=implode(",",$getCurrentSection);
+        $getCurrentGroup=array_values(array_unique($getCurrentGroup));
+        $getCurrentGroup=implode(",",$getCurrentGroup);
 
-        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentSection]);
+        DB::table("qr_students")->where("id",$student_id)->update(["section_ids"=>$getCurrentGroup]);
 
         $sqlUsed[]="UPDATE qr_students SET section_ids=? WHERE id=".$student_id;
     }

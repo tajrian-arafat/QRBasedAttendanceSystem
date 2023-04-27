@@ -342,10 +342,10 @@
         <div class="app-wrapper">
         <!--courses-->
         <aside class="wallet">
-            <h2>My Courses</h2>
+            <h2>My Programs</h2>
             <div class="pt-4 text-center list-group">
                 @foreach($courses_data as $course)
-                    <button id="course-list-{{$course->course_id}}" type="button" class="courses list-group-item list-group-item-action" onclick="fetchSectionList('{{$course->course_id}}');">{{$course->name}}</button>
+                    <button id="course-list-{{$course->course_id}}" type="button" class="courses list-group-item list-group-item-action" onclick="fetchGroupList('{{$course->course_id}}');">{{$course->name}}</button>
                 @endforeach
 
             </div>
@@ -354,11 +354,11 @@
         </aside>
 
         <content class="transactions-wrapper">
-            <h2>Sections</h2>
+            <h2>Groups</h2>
             <div class="pt-4 list-group">
 
                 <div class="row" style="align:center;" id="section-list">
-                    <b><i>Please Click a Course Name To See Sections</i></b>
+                    <b><i>Please Click a Program Name To See Groups</i></b>
                 </div>
             </div>
         </content>
@@ -371,12 +371,12 @@
 
 @section('scripts')
 <script>
-    function fetchSectionList(course_id){
+    function fetchGroupList(course_id){
 
         $('.courses').removeClass('active');
         $('#course-list-'+course_id).addClass('active');
 
-        var this_url = '{{ env('APP_URL') }}'+'/getSections';
+        var this_url = '{{ env('APP_URL') }}'+'/getGroups';
         $.ajax({
             url: this_url,
             method:'POST',
@@ -389,7 +389,7 @@
                 let sectionHtml="";
                 result=JSON.parse(result);
                 $.each(result, function(key,data){
-                    sectionHtml=sectionHtml+`<button id="section-list-${data.id}" type="button" class="sections list-group-item list-group-item-action" onclick="gotoSectionDetails('${data.id}','${data.course_id}');">${data.name}</button>`;
+                    sectionHtml=sectionHtml+`<button id="section-list-${data.id}" type="button" class="sections list-group-item list-group-item-action" onclick="gotoGroupDetails('${data.id}','${data.course_id}');">${data.name}</button>`;
                 });
                 $("#section-list").html(sectionHtml);
             }
@@ -397,7 +397,7 @@
 
     }
 
-    function gotoSectionDetails(section_id,course_id) {
+    function gotoGroupDetails(section_id,course_id) {
 
         var this_url = '{{ env('APP_URL') }}'+'/section?cid='+course_id+'&sid='+section_id;
         window.location.href=this_url;

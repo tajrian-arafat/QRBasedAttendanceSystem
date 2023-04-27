@@ -124,7 +124,7 @@ class QrCodeController extends Controller
 
                     $returnMessage=$returnMessage."Attendance Successfully Added. Thanks for being at Class.";
                 }else{
-                    $returnMessage=$returnMessage."Attendee Id Does not belong to This Section. Invalid Attendee.";
+                    $returnMessage=$returnMessage."Attendee Id Does not belong to This Group. Invalid Attendee.";
                 }
                 
             }else{

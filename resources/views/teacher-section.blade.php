@@ -583,7 +583,7 @@
                 },
                 success: function(result){
                     $("#studentModal").modal("hide");
-                    swal("Attendee Successfully Enrolled to This Section.");
+                    swal("Attendee Successfully Enrolled to This Group.");
 
                     location.reload();
                 }
@@ -604,7 +604,7 @@
                 },
                 success: function(result){
                     $("#studentModal").modal("hide");
-                    swal("Attendee Successfully Removed From This Section.");
+                    swal("Attendee Successfully Removed From This Group.");
 
                     location.reload();
                 }
