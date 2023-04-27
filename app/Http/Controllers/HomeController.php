@@ -115,7 +115,7 @@ class HomeController extends Controller
         return json_encode($students);
     }
 
-    public function addTeacher(){
+    public function addInstructor(){
 
         $name=isset($_POST["name"])?$_POST["name"]:"";
         $name=isset($_GET["name"])?$_GET["name"]:$name;

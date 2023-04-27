@@ -231,8 +231,8 @@ CREATE TABLE `qr_teachers` (
 /*Data for the table `qr_teachers` */
 
 insert  into `qr_teachers`(`id`,`name`,`email`,`password`) values 
-(1,'Teacher A','teacherone@gmail.com','123456'),
-(2,'Teacher B ','teachertwo@gmail.com','123456'),
+(1,'Instructor A','teacherone@gmail.com','123456'),
+(2,'Instructor B ','teachertwo@gmail.com','123456'),
 (3,'Mobashir Monim','mobashir.monim@bracu.ac.bd','mom1234'),
 (4,'Sabiha Nasrin','sabiha.nasrin@bracu.ac.bd','sabiha1234');
 

@@ -387,7 +387,7 @@
             <div>
               <form>
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Teacher Name..">
+                <input type="text" id="name" name="name" placeholder="Instructor Name..">
 
                 <label for="email">Email</label>
                 <input type="text" id="email" name="email" placeholder="Email ...">
@@ -395,13 +395,13 @@
                 <label for="password">Password</label>
                 <input type="text" id="password" name="password" placeholder="Password ...">
               
-                <input class="btn btn-primary" type="button" value="ADD" onclick="addTeacher()">
+                <input class="btn btn-primary" type="button" value="ADD" onclick="addInstructor()">
               </form>
             </div>
         </aside>
 
         <content class="transactions-wrapper">
-            <h2>Teachers</h2>
+            <h2>Instructors</h2>
             <div class="pt-4 list-group">
 
                 <div class="row" style="align:center;" id="section-list">
@@ -432,9 +432,9 @@
 @section('scripts')
 <script>
 
-    function addTeacher(){
+    function addInstructor(){
 
-        var this_url = '{{ env('APP_URL') }}'+'/addTeacher';
+        var this_url = '{{ env('APP_URL') }}'+'/addInstructor';
         $.ajax({
             url: this_url,
             method:'POST',
@@ -445,7 +445,7 @@
                 'password':$("#password").val(),
             },
             success: function(result){
-                swal("Teacher Successfully Added.");
+                swal("Instructor Successfully Added.");
 
                 location.reload();
             }

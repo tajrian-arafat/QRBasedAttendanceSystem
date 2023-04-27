@@ -36,8 +36,8 @@ Route::middleware([sessionChecker::class])->group(function(){
     Route::get('/home', [HomeController::class, 'home']);
     Route::get('/adminhome', [HomeController::class, 'adminhome']);
 
-    Route::get('/addTeacher', [HomeController::class, 'addTeacher']);
-    Route::post('/addTeacher', [HomeController::class, 'addTeacher']);
+    Route::get('/addInstructor', [HomeController::class, 'addInstructor']);
+    Route::post('/addInstructor', [HomeController::class, 'addInstructor']);
 
     Route::get('/section', [HomeController::class, 'section']);
 

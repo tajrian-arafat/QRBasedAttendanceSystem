@@ -85,7 +85,7 @@
                     </div>
                 @elseif($teacher == 0 )
                     <div class="col-xs-12 ml-auto d-flex justify-content-end align-self-center" style="padding:0px;float: right;width:120px;">
-                        <button class="btn btn-warning" onclick="teacherlogin();">Teacher Login</button>
+                        <button class="btn btn-warning" onclick="teacherlogin();">Instructor Login</button>
                     </div>
                 @endif
 

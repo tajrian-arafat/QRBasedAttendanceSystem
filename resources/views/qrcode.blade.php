@@ -41,7 +41,7 @@
                 qr_count++;
             }});
         }else{
-            $("#qr-div").html("Time Up! Please contact Teacher for Manual Attendance.");
+            $("#qr-div").html("Time Up! Please contact Instructor for Manual Attendance.");
         }
 
     }
